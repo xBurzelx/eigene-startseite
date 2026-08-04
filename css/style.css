@@ -1,5 +1,5 @@
 :root {
-  /* --- DEIN FARBSCHEMA --- */
+  /* --- FARBSCHEMA --- */
   --bg-color: #0a0a0a;             /* Tiefschwarz */
   --primary-color: #4169e1;        /* Königsblau */
   --accent-color: #ff1dce;         /* Heißes Magenta */
@@ -20,13 +20,101 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
 }
 
-.container { width: 100%; max-width: 750px; text-align: center; }
+/* --- ZWEI-SPALTEN-LAYOUT --- */
+.app-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  width: 100%;
+  max-width: 1100px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* --- TABELLE LINKS (SIDEBAR) --- */
+.sidebar-widget {
+  width: 320px;
+  flex-shrink: 0;
+  background: var(--card-bg);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 2px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 15px rgba(65, 105, 225, 0.25);
+  animation: boxGlow 4s ease-in-out infinite;
+}
+
+.sidebar-title {
+  color: var(--accent-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.table-container {
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Dezent gestylter Scrollbalken für die Tabelle */
+.table-container::-webkit-scrollbar {
+  width: 5px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 10px;
+}
+
+.league-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.league-table th {
+  color: var(--text-secondary);
+  padding: 8px 4px;
+  border-bottom: 1px solid rgba(65, 105, 225, 0.3);
+  text-align: center;
+  position: sticky;
+  top: 0;
+  background: rgba(10, 10, 10, 0.9);
+}
+
+.league-table td {
+  padding: 6px 4px;
+  text-align: center;
+}
+
+.league-table td.team-name {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+/* CFC-Zeile in Goldgelb hervorheben */
+.cfc-row {
+  color: var(--highlight-color) !important;
+  font-weight: bold;
+  background: rgba(255, 223, 0, 0.15);
+}
+
+/* --- DASHBOARD RECHTS --- */
+.container { 
+  flex: 1;
+  max-width: 700px; 
+  text-align: center; 
+}
 
 /* Haupt-Widget für Uhr & Wetter */
 .header-widget {
@@ -38,12 +126,13 @@ body {
   padding: 30px;
   margin-bottom: 25px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 15px rgba(65, 105, 225, 0.25);
+  animation: boxGlow 4s ease-in-out infinite;
 }
 
 .location {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--accent-color); /* Heißes Magenta */
+  color: var(--accent-color);
   margin-bottom: 8px;
   letter-spacing: 1px;
 }
@@ -51,19 +140,19 @@ body {
 .time { 
   font-size: 3.8rem; 
   font-weight: 700; 
-  color: var(--highlight-color); /* Goldgelb */
-  text-shadow: 0 0 12px rgba(255, 223, 0, 0.4);
+  color: var(--highlight-color);
+  animation: textPulse 3s ease-in-out infinite;
 }
 
 .date { 
   font-size: 1.1rem; 
   margin-bottom: 12px; 
-  color: var(--text-secondary); /* Hellgrau */
+  color: var(--text-secondary);
 }
 
 .weather { 
   font-size: 1.2rem; 
-  color: var(--accent-color); /* Heißes Magenta */
+  color: var(--accent-color);
   font-weight: 600; 
   text-shadow: 0 0 8px rgba(255, 29, 206, 0.4);
 }
@@ -128,6 +217,7 @@ body {
   transform: translateY(-4px);
   border-color: var(--highlight-color);
   box-shadow: 0 4px 15px rgba(255, 223, 0, 0.35);
+  animation: boxGlow 1.5s ease-in-out infinite;
 }
 
 .shortcut-icon img {
@@ -144,9 +234,7 @@ body {
   color: var(--text-color);
 }
 
-/* --- NEON GLOW ANIMATIONEN --- */
-
-/* 1. Pulsierender Leuchteffekt für Text (Uhrzeit) */
+/* --- ANIMATIONEN --- */
 @keyframes textPulse {
   0%, 100% {
     text-shadow: 0 0 10px rgba(255, 223, 0, 0.5), 0 0 20px rgba(255, 223, 0, 0.3);
@@ -156,7 +244,6 @@ body {
   }
 }
 
-/* 2. Pulsierender Rahmen- & Schatten-Glow */
 @keyframes boxGlow {
   0%, 100% {
     border-color: var(--primary-color);
@@ -168,19 +255,14 @@ body {
   }
 }
 
-/* --- ANIMATIONEN DEN ELEMENTEN ZUWEISEN --- */
-
-/* Uhrzeit-Text animieren */
-.time {
-  animation: textPulse 3s ease-in-out infinite;
-}
-
-/* Haupt-Box kontinuierlich leuchten lassen */
-.header-widget {
-  animation: boxGlow 4s ease-in-out infinite;
-}
-
-/* Schneller Glow beim Drüberfahren auf den Kacheln */
-.shortcut:hover {
-  animation: boxGlow 1.5s ease-in-out infinite;
+/* Responsive: Auf schmalen Bildschirmen/Handys untereinander */
+@media (max-width: 850px) {
+  .app-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+  .sidebar-widget, .container {
+    width: 100%;
+    max-width: 100%;
+  }
 }
