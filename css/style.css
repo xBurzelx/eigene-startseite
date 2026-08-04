@@ -1,0 +1,186 @@
+:root {
+  /* --- DEIN FARBSCHEMA --- */
+  --bg-color: #0a0a0a;             /* Tiefschwarz */
+  --primary-color: #4169e1;        /* Königsblau */
+  --accent-color: #ff1dce;         /* Heißes Magenta */
+  --highlight-color: #ffdf00;      /* Goldgelb */
+  --text-color: #ffffff;           /* Weiß */
+  --text-secondary: #cfcfcf;       /* Hellgrau */
+
+  --card-bg: rgba(65, 105, 225, 0.12);   /* Glas-Effekt mit Königsblau */
+  --card-hover: rgba(255, 29, 206, 0.2);  /* Magenta-Glow bei Hover */
+  --border-radius: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container { width: 100%; max-width: 750px; text-align: center; }
+
+/* Haupt-Widget für Uhr & Wetter */
+.header-widget {
+  background: var(--card-bg);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 2px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  padding: 30px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 15px rgba(65, 105, 225, 0.25);
+}
+
+.location {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--accent-color); /* Heißes Magenta */
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.time { 
+  font-size: 3.8rem; 
+  font-weight: 700; 
+  color: var(--highlight-color); /* Goldgelb */
+  text-shadow: 0 0 12px rgba(255, 223, 0, 0.4);
+}
+
+.date { 
+  font-size: 1.1rem; 
+  margin-bottom: 12px; 
+  color: var(--text-secondary); /* Hellgrau */
+}
+
+.weather { 
+  font-size: 1.2rem; 
+  color: var(--accent-color); /* Heißes Magenta */
+  font-weight: 600; 
+  text-shadow: 0 0 8px rgba(255, 29, 206, 0.4);
+}
+
+/* Suchfeld */
+.search-form {
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: var(--border-radius);
+  border: 2px solid var(--primary-color);
+  background: var(--card-bg);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--text-color);
+  font-size: 1.1rem;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.search-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.search-input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 20px rgba(255, 29, 206, 0.5);
+}
+
+/* Schnellzugriffe */
+.shortcuts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.shortcut {
+  background: var(--card-bg);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(65, 105, 225, 0.4);
+  border-radius: var(--border-radius);
+  padding: 18px;
+  text-decoration: none;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease-in-out;
+}
+
+.shortcut:hover {
+  background: var(--card-hover);
+  transform: translateY(-4px);
+  border-color: var(--highlight-color);
+  box-shadow: 0 4px 15px rgba(255, 223, 0, 0.35);
+}
+
+.shortcut-icon img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 1px solid var(--accent-color);
+}
+
+.shortcut-title { 
+  font-size: 0.9rem; 
+  font-weight: 500; 
+  color: var(--text-color);
+}
+
+/* --- NEON GLOW ANIMATIONEN --- */
+
+/* 1. Pulsierender Leuchteffekt für Text (Uhrzeit) */
+@keyframes textPulse {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(255, 223, 0, 0.5), 0 0 20px rgba(255, 223, 0, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 18px rgba(255, 223, 0, 0.9), 0 0 35px rgba(255, 29, 206, 0.7);
+  }
+}
+
+/* 2. Pulsierender Rahmen- & Schatten-Glow */
+@keyframes boxGlow {
+  0%, 100% {
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 15px rgba(65, 105, 225, 0.4);
+  }
+  50% {
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 29, 206, 0.7);
+  }
+}
+
+/* --- ANIMATIONEN DEN ELEMENTEN ZUWEISEN --- */
+
+/* Uhrzeit-Text animieren */
+.time {
+  animation: textPulse 3s ease-in-out infinite;
+}
+
+/* Haupt-Box kontinuierlich leuchten lassen */
+.header-widget {
+  animation: boxGlow 4s ease-in-out infinite;
+}
+
+/* Schneller Glow beim Drüberfahren auf den Kacheln */
+.shortcut:hover {
+  animation: boxGlow 1.5s ease-in-out infinite;
+}

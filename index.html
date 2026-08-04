@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>xBurzelx WEB-Startseite</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-widget">
+      <div class="location" id="location">📍 Chemnitz</div>
+      <div class="time" id="time">00:00</div>
+      <div class="date" id="date">Lade Datum...</div>
+      <div class="weather" id="weather">Wetter wird geladen...</div>
+    </div>
+
+    <!-- Integriertes Google-Suchfeld -->
+    <form action="https://www.google.com/search" method="get" class="search-form">
+      <input 
+        type="text" 
+        name="q" 
+        class="search-input" 
+        placeholder="Auf Google suchen..." 
+        autocomplete="off"
+        autofocus
+      >
+    </form>
+
+    <!-- Schnellzugriffe mit echten Logos -->
+    <div class="shortcuts">
+
+      <a href="https://www.youtube.com/@xBurzelx" class="shortcut">
+        <span class="shortcut-icon">
+          <img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=64" alt="YouTube">
+        </span>
+        <span class="shortcut-title">YouTube</span>
+      </a>
+
+      <a href="https://github.com/xBurzelx" class="shortcut">
+        <span class="shortcut-icon">
+          <img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="GitHub">
+        </span>
+        <span class="shortcut-title">GitHub</span>
+      </a>
+
+      <a href="https://sortitoutsi.net/" class="shortcut">
+        <span class="shortcut-icon">
+          <img src="https://www.google.com/s2/favicons?domain=sortitoutsi.net&sz=64" alt="sortitoutsi">
+        </span>
+        <span class="shortcut-title">sortitoutsi</span>
+      </a>
+
+      <a href="https://www.chemnitzerfc.de/cfc/home" class="shortcut">
+        <span class="shortcut-icon">
+          <img src="https://www.google.com/s2/favicons?domain=chemnitzerfc.de&sz=64" alt="Chemnitzer FC">
+        </span>
+        <span class="shortcut-title">Chemnitzer FC</span>
+      </a>
+
+    </div>
+  </div>
+
+</body>
+</html>
