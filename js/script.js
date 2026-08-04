@@ -1,17 +1,72 @@
-// Function zum Laden der Regionalliga Nordost Tabelle
+// 1. UHRZEIT UND DATUM
+function updateClock() {
+  const now = new Date();
+  
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const timeElem = document.getElementById('time');
+  if (timeElem) timeElem.textContent = `${hours}:${minutes}`;
+
+  const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  const dateElem = document.getElementById('date');
+  if (dateElem) dateElem.textContent = now.toLocaleDateString('de-DE', options);
+}
+
+// 2. LIVE-WETTER (Chemnitz)
+async function loadWeather() {
+  const weatherElem = document.getElementById('weather');
+  if (!weatherElem) return;
+
+  try {
+    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=50.8333&longitude=12.9167&current_weather=true');
+    const data = await res.json();
+    
+    if (data && data.current_weather) {
+      const temp = Math.round(data.current_weather.temperature);
+      const code = data.current_weather.weathercode;
+
+      let desc = "Klar";
+      if (code >= 1 && code <= 3) desc = "Leicht bewölkt";
+      else if (code >= 45 && code <= 48) desc = "Nebel";
+      else if (code >= 51 && code <= 67) desc = "Regen";
+      else if (code >= 71 && code <= 77) desc = "Schnee";
+      else if (code >= 80 && code <= 82) desc = "Regenschauer";
+      else if (code >= 95) desc = "Gewitter";
+
+      weatherElem.textContent = `${temp}°C – ${desc}`;
+    }
+  } catch (e) {
+    weatherElem.textContent = "Wetter derzeit nicht verfügbar";
+  }
+}
+
+// 3. REGIONALLIGA NORDOST TABELLE
 async function loadLeagueTable() {
   const tbody = document.getElementById('table-body');
   if (!tbody) return;
 
   try {
-    const response = await fetch('https://api.openligadb.de/getbltable/rlno/2025');
-    const data = await response.json();
+    // Versuch 1: Saison 2025/2026
+    let response = await fetch('https://api.openligadb.de/getbltable/rlno/2025');
+    let data = await response.json();
+
+    // Fallback auf 2024, falls die neue Saison noch keine vollen Spieldaten hat
+    if (!Array.isArray(data) || data.length < 5) {
+      response = await fetch('https://api.openligadb.de/getbltable/rlno/2024');
+      data = await response.json();
+    }
+
+    if (!Array.isArray(data) || data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4">Keine Daten verfügbar</td></tr>';
+      return;
+    }
 
     tbody.innerHTML = '';
 
     data.forEach((team, index) => {
       const tr = document.createElement('tr');
-      const isCFC = team.teamName.toLowerCase().includes('chemnitz');
+      const teamName = team.teamName || team.TeamName || 'Unbekannt';
+      const isCFC = teamName.toLowerCase().includes('chemnitz');
 
       if (isCFC) {
         tr.classList.add('cfc-row');
@@ -19,9 +74,9 @@ async function loadLeagueTable() {
 
       tr.innerHTML = `
         <td>${index + 1}</td>
-        <td class="team-name" title="${team.teamName}">${team.teamName}</td>
-        <td>${team.matches}</td>
-        <td>${team.points}</td>
+        <td class="team-name" title="${teamName}">${teamName}</td>
+        <td>${team.matches ?? team.Matches ?? 0}</td>
+        <td>${team.points ?? team.Points ?? 0}</td>
       `;
       tbody.appendChild(tr);
     });
@@ -30,7 +85,16 @@ async function loadLeagueTable() {
   }
 }
 
-// Beim Laden der Seite ausführen
-document.addEventListener('DOMContentLoaded', () => {
+// Skript-Startfunktion
+function initApp() {
+  updateClock();
+  setInterval(updateClock, 1000);
+  loadWeather();
   loadLeagueTable();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
