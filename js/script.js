@@ -45,44 +45,58 @@ async function loadLeagueTable() {
   const tbody = document.getElementById('table-body');
   if (!tbody) return;
 
-  try {
-    // Versuch 1: Saison 2025/2026
-    let response = await fetch('https://api.openligadb.de/getbltable/rlno/2025');
-    let data = await response.json();
+  // Verschiedene Mögliche OpenLigaDB-Kürzel & Saisons abfragen
+  const apiUrls = [
+    'https://api.openligadb.de/getbltable/rlno/2025',
+    'https://api.openligadb.de/getbltable/rlno/2024',
+    'https://api.openligadb.de/getbltable/rl-nordost/2025',
+    'https://api.openligadb.de/getbltable/rl-nordost/2024'
+  ];
 
-    // Fallback auf 2024, falls die neue Saison noch keine vollen Spieldaten hat
-    if (!Array.isArray(data) || data.length < 5) {
-      response = await fetch('https://api.openligadb.de/getbltable/rlno/2024');
-      data = await response.json();
-    }
+  let data = null;
 
-    if (!Array.isArray(data) || data.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="4">Keine Daten verfügbar</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = '';
-
-    data.forEach((team, index) => {
-      const tr = document.createElement('tr');
-      const teamName = team.teamName || team.TeamName || 'Unbekannt';
-      const isCFC = teamName.toLowerCase().includes('chemnitz');
-
-      if (isCFC) {
-        tr.classList.add('cfc-row');
+  for (const url of apiUrls) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        const json = await res.json();
+        if (Array.isArray(json) && json.length > 2) {
+          data = json;
+          break; // Erfolgreich vollständige Tabelle gefunden
+        }
       }
-
-      tr.innerHTML = `
-        <td>${index + 1}</td>
-        <td class="team-name" title="${teamName}">${teamName}</td>
-        <td>${team.matches ?? team.Matches ?? 0}</td>
-        <td>${team.points ?? team.Points ?? 0}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  } catch (err) {
-    tbody.innerHTML = '<tr><td colspan="4">Tabelle derzeit nicht verfügbar</td></tr>';
+    } catch (e) {
+      console.warn('API-Versuch fehlgeschlagen:', url);
+    }
   }
+
+  if (!data) {
+    tbody.innerHTML = '<tr><td colspan="4">Tabelle derzeit nicht erreichbar</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = '';
+
+  data.forEach((team, index) => {
+    const tr = document.createElement('tr');
+    const teamName = team.teamName || team.TeamName || 'Unbekannt';
+    const matches = team.matches ?? team.Matches ?? 0;
+    const points = team.points ?? team.Points ?? 0;
+
+    const isCFC = teamName.toLowerCase().includes('chemnitz');
+
+    if (isCFC) {
+      tr.classList.add('cfc-row');
+    }
+
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td class="team-name" title="${teamName}">${teamName}</td>
+      <td>${matches}</td>
+      <td>${points}</td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 // Skript-Startfunktion
