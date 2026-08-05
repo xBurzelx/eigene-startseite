@@ -37,7 +37,7 @@ body {
 
 /* --- TABELLE LINKS (SIDEBAR) --- */
 .sidebar-widget {
-  width: 320px;
+  width: 480px;
   flex-shrink: 0;
   background: var(--card-bg);
   -webkit-backdrop-filter: blur(12px);
